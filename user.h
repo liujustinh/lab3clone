@@ -3,7 +3,7 @@ struct rtcdate;
 
 // system calls
 int fork(void);
-int exit(int status) //updated exit
+void exit(int status); //updated exit
 int wait(int*); // updated paramter for wait 
 int waitpid(int pid, int *status, int options); //added waitpid to system calls
 int pipe(int*);
