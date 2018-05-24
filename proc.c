@@ -289,6 +289,8 @@ wait(int *status)
       havekids = 1;
       if(p->state == ZOMBIE){
         // Found one.
+	if(status)
+	    *status = p->status;
         pid = p->pid;
         kfree(p->kstack);
         p->kstack = 0;
@@ -329,7 +331,7 @@ int waitpid(int child_pid, int *status, int options)
       }
       havekids = 1;
       if(p->state == ZOMBIE) {
-        *status = p->status; 
+        		*status = p->status; 
 			  pid = p->pid; 
 			  kfree(p->kstack); 
 			  p->kstack = 0; 
@@ -349,7 +351,8 @@ int waitpid(int child_pid, int *status, int options)
     }
     sleep(curproc, &ptable.lock);
        
-      
+  }
+}
 
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
@@ -390,7 +393,7 @@ scheduler(void)
         cur_proc->age = cur_proc->age + 1;
       }
         high->age = 0;
-      p = high;
+     	p = high;
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
