@@ -38,30 +38,14 @@ sys_fork(void)
 int
 sys_exit(void)
 {
-  int status;
-  argint(0,&status);
-  exit(status);
+  exit();
   return 0;  // not reached
 }
 
 int
 sys_wait(void)
 {
-  int *status;
-  argptr(0,(char**)&status, sizeof(int*));
-  return wait(status);
-}
-
-int 
-sys_waitpid(void)
-{
-  int* p;
-  int option;
-  int pid;
-  argint(2, &option);
-  argint(0, &pid);
-  argptr(1, (char**)&p, sizeof(int*));
-  return waitpid(pid, p, option);
+  return wait();
 }
 
 int
@@ -127,11 +111,3 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
-
-void
-sys_setPriority(void){
-  int newp;
-  argint(0, &newp);
-  setPriority(newp);
-  }
-  

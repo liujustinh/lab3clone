@@ -103,8 +103,6 @@ extern int sys_unlink(void);
 extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
-extern int sys_waitpid(void); // added waitpid system call
-extern int sys_setPriority(void); // addeded setPriority system call
 
 extern int sys_shm_open(void);
 extern int sys_shm_close(void);
@@ -113,7 +111,6 @@ static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
 [SYS_exit]    sys_exit,
 [SYS_wait]    sys_wait,
-[SYS_waitpid] sys_waitpid, // added waitpid system call
 [SYS_pipe]    sys_pipe,
 [SYS_read]    sys_read,
 [SYS_kill]    sys_kill,
@@ -134,7 +131,6 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_shm_open] sys_shm_open,
 [SYS_shm_close] sys_shm_close
-[SYS_setPriority] sys_setPriority,  // added set_priority system call
 };
 
 void
