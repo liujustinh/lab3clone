@@ -322,7 +322,7 @@ copyuvm(pde_t *pgdir, uint sz, uint stack_sz)
 
   if((d = setupkvm()) == 0)
     return 0;
-  for(i = 0; i < sz; i += PGSIZE){
+  for(i = 0; i < sz; i += PGSIZE){			
     if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
       panic("copyuvm: pte should exist");
     if(!(*pte & PTE_P))
@@ -335,7 +335,7 @@ copyuvm(pde_t *pgdir, uint sz, uint stack_sz)
     if(mappages(d, (void*)i, PGSIZE, V2P(mem), flags) < 0)
       goto bad;
   }
-  for(i = KERNBASE - stack_sz*PGSIZE; i < KERNBASE && stack_sz > 0; i += PGSIZE){
+  for(i = KERNBASE - stack_sz*PGSIZE; i < KERNBASE && stack_sz > 0; i += PGSIZE, --stack_sz){  //use stack_sz to keep track of stack pages, iterate through to account for stack growth
     if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
       panic("copyuvm: pte should exist");
     if(!(*pte & PTE_P))
@@ -347,7 +347,6 @@ copyuvm(pde_t *pgdir, uint sz, uint stack_sz)
     memmove(mem, (char*)P2V(pa), PGSIZE);
     if(mappages(d, (void*)i, PGSIZE, V2P(mem), flags) < 0)
       goto bad;
-      --stack_sz; 
   }
   return d;
 

@@ -66,10 +66,10 @@ exec(char *path, char **argv)
   sz = PGROUNDUP(sz);
   sz_temp = sz; 
   if((sz = allocuvm(pgdir, KERNBASE - PGSIZE, KERNBASE - 1)) == 0)
-    goto bad;
+    goto bad; 
   sz = sz_temp; 
   //clearpteu(pgdir, (char*)(sz - 2*PGSIZE));
-  sp = KERNBASE - 1; 	//want stack to grown downwards
+  sp = KERNBASE - 1; 	//want stack to grown downwards, top of stack
   curproc->stack_sz = 1; 
 
   // Push argument strings, prepare rest of stack in ustack.

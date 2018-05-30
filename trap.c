@@ -47,13 +47,13 @@ trap(struct trapframe *tf)
   }
 
   switch(tf->trapno){
-  case T_PGFLT:
+  case T_PGFLT:			//added case for page faults when trap is called
 	cprintf("Page fault occurred... \n"); 
 	while (rcr2() < KERNBASE - myproc()->stack_sz*PGSIZE) {
-		if (allocuvm(myproc()->pgdir, KERNBASE - (myproc()->stack_sz + 1)*PGSIZE, KERNBASE - (myproc()->stack_sz)*PGSIZE - 1) == 0) {
+		if (allocuvm(myproc()->pgdir, KERNBASE - (myproc()->stack_sz + 1)*PGSIZE, KERNBASE - (myproc()->stack_sz)*PGSIZE - 1) == 0) { 	//check if page accessed right under current top of stack
 			freevm(myproc()->pgdir);
 		}
-	myproc()->stack_sz = myproc()->stack_sz + 1; 
+	myproc()->stack_sz++;  
 	}
 	break; 
   case T_IRQ0 + IRQ_TIMER:
