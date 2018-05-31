@@ -12,8 +12,7 @@ exec(char *path, char **argv)
 {
   char *s, *last;
   int i, off;
-  uint argc, sz, sp, ustack[3+MAXARG+1];
-  uint sz_temp; 
+  uint argc, sz, sp, ustack[3+MAXARG+1]; 
   struct elfhdr elf;
   struct inode *ip;
   struct proghdr ph;
@@ -64,13 +63,12 @@ exec(char *path, char **argv)
   // Allocate two pages at the next page boundary.
   // Make the first inaccessible.  Use the second as the user stack.
   sz = PGROUNDUP(sz);
-  sz_temp = sz; 
-  if((sz = allocuvm(pgdir, KERNBASE - PGSIZE, KERNBASE - 1)) == 0)
-    goto bad; 
-  sz = sz_temp; 
+ 
+  if(allocuvm(pgdir, KERNBASE - PGSIZE, KERNBASE - 1) == 0) //who cares about sz anymore
+    goto bad;  
   //clearpteu(pgdir, (char*)(sz - 2*PGSIZE));
-  sp = KERNBASE - 1; 	//want stack to grown downwards, top of stack
-  curproc->stack_sz = 1; 
+  sp = KERNBASE - 1; 	//want stack to grown downwards, point to 1 under kernel address space
+  curproc->stack_sz = 1; //set the process's stack_sz to 1 
 
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
