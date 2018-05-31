@@ -326,7 +326,7 @@ copyuvm(pde_t *pgdir, uint sz, uint stack_sz)
     if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
       panic("copyuvm: pte should exist");
     if(!(*pte & PTE_P))
-      panic("copyuvm: page not present 1");
+      panic("copyuvm: page not present");
     pa = PTE_ADDR(*pte);
     flags = PTE_FLAGS(*pte);
     if((mem = kalloc()) == 0)
@@ -335,8 +335,8 @@ copyuvm(pde_t *pgdir, uint sz, uint stack_sz)
     if(mappages(d, (void*)i, PGSIZE, V2P(mem), flags) < 0)
       goto bad;
   }
-  for(i = KERNBASE - stack_sz*PGSIZE; i < KERNBASE && stack_sz > 0; i += PGSIZE, --stack_sz){  //use stack_sz to keep track of stack pages, iterate through to account for stack growth
-    if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
+  for(i = KERNBASE - stack_sz*PGSIZE; i < KERNBASE && stack_sz > 0; i += PGSIZE){  //use stack_sz to keep track of stack pages, iterate through to account for stack growth
+    if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)				//start i at bottom of the kernel address space of the process, iterate thru to the top of kernel address space
       panic("copyuvm: pte should exist");
     if(!(*pte & PTE_P))
       panic("copyuvm: page not present");
